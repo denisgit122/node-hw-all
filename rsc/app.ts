@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/users", userRouter);
 
 app.use((err: IError, req: Request, res: Response, next: NextFunction) => {
-  const status = err.status;
+  const status = err.status || 500;
   console.log(err);
 
   return res.status(status).json({
