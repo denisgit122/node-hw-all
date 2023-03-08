@@ -8,6 +8,6 @@ const router = (0, express_1.Router)();
 router.get("/", user_controller_1.userController.getAll);
 router.post("/", user_middleware_1.userMiddleware.isUserValidCreate, user_controller_1.userController.create);
 router.get("/:userId", user_middleware_1.userMiddleware.isUserIdValid, user_middleware_1.userMiddleware.getByIdAndThrow, user_controller_1.userController.getById);
-router.put("/:userId", user_middleware_1.userMiddleware.isUserIdValid, user_controller_1.userController.update);
+router.put("/:userId", user_middleware_1.userMiddleware.isUserValidUpdate, user_middleware_1.userMiddleware.isUserIdValid, user_controller_1.userController.update);
 router.delete("/:userId", user_middleware_1.userMiddleware.isUserIdValid, user_controller_1.userController.delete);
 exports.userRouter = router;

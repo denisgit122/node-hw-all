@@ -43,5 +43,18 @@ class UserMiddleware {
             next(e);
         }
     }
+    async isUserValidUpdate(req, res, next) {
+        try {
+            const { error, value } = valitors_1.UserValidator.updateUser.validate(req.body);
+            if (error) {
+                throw new api_error_1.ApiError(error.message, 400);
+            }
+            req.body = value;
+            next();
+        }
+        catch (e) {
+            next(e);
+        }
+    }
 }
 exports.userMiddleware = new UserMiddleware();

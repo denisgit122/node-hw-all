@@ -16,7 +16,12 @@ router.get(
   userController.getById
 );
 
-router.put("/:userId", userMiddleware.isUserIdValid, userController.update);
+router.put(
+  "/:userId",
+  userMiddleware.isUserValidUpdate,
+  userMiddleware.isUserIdValid,
+  userController.update
+);
 
 router.delete("/:userId", userMiddleware.isUserIdValid, userController.delete);
 

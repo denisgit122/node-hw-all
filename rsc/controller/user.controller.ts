@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 
 import { User } from "../modeles/User.model";
 import { userService } from "../services/user.service";
-import { IMessage } from "../types/common.type";
 import { ICommontResponse } from "../types/common.type";
 import { IUser } from "../types/User.types";
 
@@ -61,11 +60,12 @@ class UserController {
       const { userId } = req.params;
       const updatedUser = req.body;
 
-      const updateOne = await User.updateOne(
+      const updateOne = await User.findByIdAndUpdate(
         { _id: userId },
-        { ...updatedUser }
+        { ...updatedUser },
+        { new: true }
       );
-      return res.status(200).json({
+      return res.status(201).json({
         message: "User updated",
         data: updateOne,
       });
@@ -78,14 +78,12 @@ class UserController {
     req: Request,
     res: Response,
     next: NextFunction
-  ): Promise<Response<IMessage>> {
+  ): Promise<Response<void>> {
     try {
       const { userId } = req.params;
       await User.deleteOne({ _id: userId });
 
-      return res.status(200).json({
-        message: "User deleted",
-      });
+      return res.sendStatus(204);
     } catch (e) {
       next(e);
     }
