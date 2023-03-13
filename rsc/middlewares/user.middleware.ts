@@ -3,6 +3,7 @@ import { isObjectIdOrHexString } from "mongoose";
 
 import { ApiError } from "../errors/api.error";
 import { User } from "../modeles/User.model";
+import { IRequest } from "../types/common.type";
 import { UserValidator } from "../valitors";
 
 class UserMiddleware {
@@ -23,7 +24,40 @@ class UserMiddleware {
       next(e);
     }
   }
+  //створює одну валідацію мідлварку яка буде мітити декілька
+  // з бази даних динамічно витягуємо користувача  і у випадку якщо ми його знайдемо  викидуємо пеану помилку
+  //і тепер ми не просто кидаємо мідл варку на посилання ми будемо викдикати функцію
 
+  public getDyamicallyAndThrow(
+    fildName: string,
+    // from && dbField default value
+    from = "body",
+    dbField = fildName
+  ) {
+    return async (req: IRequest, res: Response, next: NextFunction) => {
+      try {
+        //  логіка
+        // fieldValue це по тому по чому шукаємо
+
+        const fieldValue = req[from][fildName];
+        //  шукаємо user
+        const user = await User.findOne({ [dbField]: fieldValue });
+        //якщо користувача знайшли то викидуємо ерор
+        if (user) {
+          throw new ApiError(
+            `user with ${fildName} ${fieldValue} already exist  `,
+            409
+          );
+        }
+        //  if okk
+        next();
+      } catch (e) {
+        next(e);
+      }
+    };
+  }
+
+  // /validators
   public async isUserValidCreate(
     req: Request,
     res: Response,

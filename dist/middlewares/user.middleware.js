@@ -19,6 +19,21 @@ class UserMiddleware {
             next(e);
         }
     }
+    getDyamicallyAndThrow(fildName, from = "body", dbField = fildName) {
+        return async (req, res, next) => {
+            try {
+                const fieldValue = req[from][fildName];
+                const user = await User_model_1.User.findOne({ [dbField]: fieldValue });
+                if (user) {
+                    throw new api_error_1.ApiError(`user with ${fildName} ${fieldValue} already exist  `, 409);
+                }
+                next();
+            }
+            catch (e) {
+                next(e);
+            }
+        };
+    }
     async isUserValidCreate(req, res, next) {
         try {
             const { error, value } = valitors_1.UserValidator.createUser.validate(req.body);
