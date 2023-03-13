@@ -34,6 +34,22 @@ class UserMiddleware {
             }
         };
     }
+    getDyamicallyOrThrow(fildName, from = "body", dbField = fildName) {
+        return async (req, res, next) => {
+            try {
+                const fieldValue = req[from][fildName];
+                const user = await User_model_1.User.findOne({ [dbField]: fieldValue });
+                if (!user) {
+                    throw new api_error_1.ApiError(`user not found`, 422);
+                }
+                req.res.locals = user;
+                next();
+            }
+            catch (e) {
+                next(e);
+            }
+        };
+    }
     async isUserValidCreate(req, res, next) {
         try {
             const { error, value } = valitors_1.UserValidator.createUser.validate(req.body);
@@ -65,6 +81,18 @@ class UserMiddleware {
                 throw new api_error_1.ApiError(error.message, 400);
             }
             req.body = value;
+            next();
+        }
+        catch (e) {
+            next(e);
+        }
+    }
+    async isUserValidLogin(req, res, next) {
+        try {
+            const { error } = valitors_1.UserValidator.loginUser.validate(req.body);
+            if (error) {
+                throw new api_error_1.ApiError(error.message, 400);
+            }
             next();
         }
         catch (e) {

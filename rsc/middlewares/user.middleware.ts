@@ -57,6 +57,33 @@ class UserMiddleware {
     };
   }
 
+  public getDyamicallyOrThrow(
+    fildName: string,
+    // from && dbField default value
+    from = "body",
+    dbField = fildName
+  ) {
+    return async (req: IRequest, res: Response, next: NextFunction) => {
+      try {
+        //  логіка
+        // fieldValue це по тому по чому шукаємо
+
+        const fieldValue = req[from][fildName];
+        //  шукаємо user
+        const user = await User.findOne({ [dbField]: fieldValue });
+        //якщо користувача ne знайшли то викидуємо ерор
+        if (!user) {
+          throw new ApiError(`user not found`, 422);
+        }
+        //  if okk
+        req.res.locals = user;
+        next();
+      } catch (e) {
+        next(e);
+      }
+    };
+  }
+
   // /validators
   public async isUserValidCreate(
     req: Request,
@@ -103,6 +130,22 @@ class UserMiddleware {
       }
       req.body = value;
 
+      next();
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  public async isUserValidLogin(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { error } = UserValidator.loginUser.validate(req.body);
+      if (error) {
+        throw new ApiError(error.message, 400);
+      }
       next();
     } catch (e) {
       next(e);

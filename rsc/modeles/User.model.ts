@@ -1,6 +1,6 @@
 import { model, Schema } from "mongoose";
 
-import { EGender } from "../types/User.types";
+import { EGender } from "../types";
 
 const userSchema = new Schema(
   {
@@ -25,6 +25,7 @@ const userSchema = new Schema(
   },
   {
     versionKey: false,
+    timestamp: true,
   }
 );
 export const User = model("user", userSchema);

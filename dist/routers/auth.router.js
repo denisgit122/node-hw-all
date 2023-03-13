@@ -6,5 +6,6 @@ const auth_controller_1 = require("../controller/auth.controller");
 const user_middleware_1 = require("../middlewares/user.middleware");
 const router = (0, express_1.Router)();
 router.post("/register", user_middleware_1.userMiddleware.isUserValidCreate, user_middleware_1.userMiddleware.getDyamicallyAndThrow("email"), auth_controller_1.authController.register);
+router.post("/login", user_middleware_1.userMiddleware.isUserValidLogin, user_middleware_1.userMiddleware.getDyamicallyOrThrow("email"), auth_controller_1.authController.login);
 router.post("/login");
 exports.authRouter = router;

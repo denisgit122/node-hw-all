@@ -1,7 +1,7 @@
 import * as Joi from "joi";
 
 import { regexConstants } from "../constants";
-import { EGender } from "../types/User.types";
+import { EGender } from "../types";
 
 export class UserValidator {
   //перевірка
@@ -24,5 +24,10 @@ export class UserValidator {
   static updateUser = Joi.object({
     name: this.firstName,
     gender: this.gender,
+  });
+
+  static loginUser = Joi.object({
+    email: this.email.required(),
+    password: this.password.required(),
   });
 }

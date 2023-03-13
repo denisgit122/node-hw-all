@@ -12,5 +12,17 @@ class AuthController {
             next(e);
         }
     }
+    async login(req, res, next) {
+        try {
+            const { email, password } = req.body;
+            const user = req.res.locals;
+            const tokenPair = await auth_service_1.authService.login({
+                email,
+                password,
+            }, user);
+            return res.status(200).json(tokenPair);
+        }
+        catch (e) { }
+    }
 }
 exports.authController = new AuthController();

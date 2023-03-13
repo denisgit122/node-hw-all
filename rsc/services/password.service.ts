@@ -1,4 +1,3 @@
-// @ts-ignore
 import bcrypt from "bcrypt";
 
 class PasswordService {
