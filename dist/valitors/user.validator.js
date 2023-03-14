@@ -27,7 +27,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserValidator = void 0;
 const Joi = __importStar(require("joi"));
 const constants_1 = require("../constants");
-const types_1 = require("../types");
+const enums_1 = require("../enums");
 class UserValidator {
 }
 exports.UserValidator = UserValidator;
@@ -39,7 +39,7 @@ UserValidator.email = Joi.string()
     .lowercase()
     .trim();
 UserValidator.password = Joi.string().regex(constants_1.regexConstants.PASSWORD);
-UserValidator.gender = Joi.valid(...Object.values(types_1.EGender));
+UserValidator.gender = Joi.valid(...Object.values(enums_1.EGender));
 UserValidator.createUser = Joi.object({
     name: _a.firstName.required(),
     email: _a.email.required(),

@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 
-import { User } from "../modeles/User.model";
-import { userService } from "../services/user.service";
-import { ICommontResponse } from "../types/common.type";
-import { IUser } from "../types/User.types";
+import { User } from "../modeles";
+import { userService } from "../services";
+import { ICommontResponse } from "../types";
+import { IUser } from "../types";
 
 class UserController {
   public async getAll(
@@ -25,9 +25,9 @@ class UserController {
     next: NextFunction
   ): Promise<Response<IUser>> {
     try {
-      const { userId } = req.params;
-
-      const user = await userService.getById(userId);
+      // const { userId } = req.params;
+      const { user } = res.locals;
+      // const user = await userService.getById(userId);
       return res.json(user);
     } catch (e) {
       next(e);

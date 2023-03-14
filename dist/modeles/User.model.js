@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const mongoose_1 = require("mongoose");
-const types_1 = require("../types");
+const enums_1 = require("../enums");
 const userSchema = new mongoose_1.Schema({
     name: {
         type: String,
@@ -20,7 +20,7 @@ const userSchema = new mongoose_1.Schema({
     },
     gender: {
         type: String,
-        enum: types_1.EGender,
+        enum: enums_1.EGender,
     },
 }, {
     versionKey: false,

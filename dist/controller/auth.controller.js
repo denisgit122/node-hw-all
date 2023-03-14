@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authController = void 0;
-const auth_service_1 = require("../services/auth.service");
+const services_1 = require("../services");
 class AuthController {
     async register(req, res, next) {
         try {
-            await auth_service_1.authService.register(req.body);
+            await services_1.authService.register(req.body);
             res.sendStatus(201);
         }
         catch (e) {
@@ -15,14 +15,23 @@ class AuthController {
     async login(req, res, next) {
         try {
             const { email, password } = req.body;
-            const user = req.res.locals;
-            const tokenPair = await auth_service_1.authService.login({
-                email,
-                password,
-            }, user);
+            const { user } = req.res.locals;
+            const tokenPair = await services_1.authService.login({ email, password }, user);
             return res.status(200).json(tokenPair);
         }
-        catch (e) { }
+        catch (e) {
+            next(e);
+        }
+    }
+    async refresh(req, res, next) {
+        try {
+            const { tokenInfo, jwtPayload } = req.res.locals;
+            const tokenPair = await services_1.authService.refresh(tokenInfo, jwtPayload);
+            return res.status(200).json(tokenPair);
+        }
+        catch (e) {
+            next(e);
+        }
     }
 }
 exports.authController = new AuthController();

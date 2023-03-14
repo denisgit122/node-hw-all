@@ -1,7 +1,7 @@
 import * as Joi from "joi";
 
 import { regexConstants } from "../constants";
-import { EGender } from "../types";
+import { EGender } from "../enums";
 
 export class UserValidator {
   //перевірка

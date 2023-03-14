@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { isObjectIdOrHexString } from "mongoose";
 
-import { ApiError } from "../errors/api.error";
-import { User } from "../modeles/User.model";
-import { IRequest } from "../types/common.type";
+import { ApiError } from "../errors";
+import { User } from "../modeles";
+import { IRequest } from "../types";
 import { UserValidator } from "../valitors";
 
 class UserMiddleware {
@@ -19,6 +19,7 @@ class UserMiddleware {
       if (!user) {
         throw new ApiError("user not faund", 422);
       }
+      res.locals = { user };
       next();
     } catch (e) {
       next(e);
@@ -76,7 +77,7 @@ class UserMiddleware {
           throw new ApiError(`user not found`, 422);
         }
         //  if okk
-        req.res.locals = user;
+        req.res.locals = { user };
         next();
       } catch (e) {
         next(e);

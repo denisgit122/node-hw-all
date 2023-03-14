@@ -1,7 +1,7 @@
 import { Router } from "express";
 
-import { authController } from "../controller/auth.controller";
-import { userMiddleware } from "../middlewares/user.middleware";
+import { authController } from "../controller";
+import { authMiddleware, userMiddleware } from "../middlewares";
 
 const router = Router();
 
@@ -18,6 +18,12 @@ router.post(
   userMiddleware.isUserValidLogin,
   userMiddleware.getDyamicallyOrThrow("email"),
   authController.login
+);
+
+router.post(
+  "/refresh",
+  authMiddleware.checkRefreshToken,
+  authController.refresh
 );
 
 router.post("/login");

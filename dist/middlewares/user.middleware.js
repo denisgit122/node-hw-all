@@ -2,17 +2,18 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userMiddleware = void 0;
 const mongoose_1 = require("mongoose");
-const api_error_1 = require("../errors/api.error");
-const User_model_1 = require("../modeles/User.model");
+const errors_1 = require("../errors");
+const modeles_1 = require("../modeles");
 const valitors_1 = require("../valitors");
 class UserMiddleware {
     async getByIdAndThrow(req, res, next) {
         try {
             const { userId } = req.params;
-            const user = await User_model_1.User.findById(userId);
+            const user = await modeles_1.User.findById(userId);
             if (!user) {
-                throw new api_error_1.ApiError("user not faund", 422);
+                throw new errors_1.ApiError("user not faund", 422);
             }
+            res.locals = { user };
             next();
         }
         catch (e) {
@@ -23,9 +24,9 @@ class UserMiddleware {
         return async (req, res, next) => {
             try {
                 const fieldValue = req[from][fildName];
-                const user = await User_model_1.User.findOne({ [dbField]: fieldValue });
+                const user = await modeles_1.User.findOne({ [dbField]: fieldValue });
                 if (user) {
-                    throw new api_error_1.ApiError(`user with ${fildName} ${fieldValue} already exist  `, 409);
+                    throw new errors_1.ApiError(`user with ${fildName} ${fieldValue} already exist  `, 409);
                 }
                 next();
             }
@@ -38,11 +39,11 @@ class UserMiddleware {
         return async (req, res, next) => {
             try {
                 const fieldValue = req[from][fildName];
-                const user = await User_model_1.User.findOne({ [dbField]: fieldValue });
+                const user = await modeles_1.User.findOne({ [dbField]: fieldValue });
                 if (!user) {
-                    throw new api_error_1.ApiError(`user not found`, 422);
+                    throw new errors_1.ApiError(`user not found`, 422);
                 }
-                req.res.locals = user;
+                req.res.locals = { user };
                 next();
             }
             catch (e) {
@@ -54,7 +55,7 @@ class UserMiddleware {
         try {
             const { error, value } = valitors_1.UserValidator.createUser.validate(req.body);
             if (error) {
-                throw new api_error_1.ApiError(error.message, 400);
+                throw new errors_1.ApiError(error.message, 400);
             }
             req.body = value;
             next();
@@ -66,7 +67,7 @@ class UserMiddleware {
     async isUserIdValid(req, res, next) {
         try {
             if (!(0, mongoose_1.isObjectIdOrHexString)(req.params.userId)) {
-                throw new api_error_1.ApiError("Id not", 400);
+                throw new errors_1.ApiError("Id not", 400);
             }
             next();
         }
@@ -78,7 +79,7 @@ class UserMiddleware {
         try {
             const { error, value } = valitors_1.UserValidator.updateUser.validate(req.body);
             if (error) {
-                throw new api_error_1.ApiError(error.message, 400);
+                throw new errors_1.ApiError(error.message, 400);
             }
             req.body = value;
             next();
@@ -91,7 +92,7 @@ class UserMiddleware {
         try {
             const { error } = valitors_1.UserValidator.loginUser.validate(req.body);
             if (error) {
-                throw new api_error_1.ApiError(error.message, 400);
+                throw new errors_1.ApiError(error.message, 400);
             }
             next();
         }

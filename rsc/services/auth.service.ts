@@ -1,8 +1,8 @@
-import { ApiError } from "../errors/api.error";
-import { Token } from "../modeles/Token.model";
-import { User } from "../modeles/User.model";
-import { ITokenPair, IUser } from "../types";
-import { ICredentials } from "../types/auth.types";
+import { ApiError } from "../errors";
+import { Token } from "../modeles";
+import { User } from "../modeles";
+import { ITokenPair, ITokenPayload, IUser } from "../types";
+import { ICredentials } from "../types";
 import { passwordService } from "./password.service";
 import { tokenService } from "./token.service";
 
@@ -38,12 +38,33 @@ class AuthService {
       // якщо ввели все правельно ви
       const tokenPair = tokenService.genereteTokenPair({
         name: user.name,
-        id: user._id,
+        _id: user._id,
       });
       await Token.create({
         _user_id: user._id,
         ...tokenPair,
       });
+
+      return tokenPair;
+    } catch (e) {
+      throw new ApiError(e.message, e.status);
+    }
+  }
+
+  public async refresh(
+    tokenInfo: ITokenPair,
+    jwtPayload: ITokenPayload
+  ): Promise<ITokenPair> {
+    try {
+      console.log(jwtPayload);
+      const tokenPair = tokenService.genereteTokenPair({
+        _id: jwtPayload._id,
+        name: jwtPayload.name,
+      });
+      await Promise.all([
+        Token.create({ _user_id: jwtPayload._id, ...tokenPair }),
+        Token.deleteOne({ refreshToken: tokenInfo.refreshToken }),
+      ]);
 
       return tokenPair;
     } catch (e) {

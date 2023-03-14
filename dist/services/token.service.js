@@ -25,19 +25,38 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.tokenService = void 0;
 const jwt = __importStar(require("jsonwebtoken"));
-const token_constants_1 = require("../constants/token.constants");
+const configs_1 = require("../configs");
+const enums_1 = require("../enums");
+const errors_1 = require("../errors");
 class TokenService {
     genereteTokenPair(payload) {
-        const accessToken = jwt.sign(payload, token_constants_1.tokenConstants.ACCESS_SECRET, {
+        const accessToken = jwt.sign(payload, configs_1.confi.ACCESS_SECRET, {
             expiresIn: "15m",
         });
-        const refreshToken = jwt.sign(payload, token_constants_1.tokenConstants.REFRESH_SECRET, {
+        const refreshToken = jwt.sign(payload, configs_1.confi.REFRESH_SECRET, {
             expiresIn: "30d",
         });
         return {
             accessToken,
             refreshToken,
         };
+    }
+    checkToken(token, tokenType = enums_1.ETokenType.access) {
+        try {
+            let secret = "";
+            switch (tokenType) {
+                case enums_1.ETokenType.access:
+                    secret = configs_1.confi.ACCESS_SECRET;
+                    break;
+                case enums_1.ETokenType.refresh:
+                    secret = configs_1.confi.REFRESH_SECRET;
+                    break;
+            }
+            return jwt.verify(token, secret);
+        }
+        catch (e) {
+            throw new errors_1.ApiError("Token nor valid", 401);
+        }
     }
 }
 exports.tokenService = new TokenService();
