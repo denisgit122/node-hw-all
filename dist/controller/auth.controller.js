@@ -33,5 +33,16 @@ class AuthController {
             next(e);
         }
     }
+    async changePassword(req, res, next) {
+        try {
+            const { tokenInfo } = req.res.locals;
+            const { oldPassword, newPassword } = req.body;
+            await services_1.authService.changePassword(tokenInfo._user_id, oldPassword, newPassword);
+            res.sendStatus(200);
+        }
+        catch (e) {
+            next(e);
+        }
+    }
 }
 exports.authController = new AuthController();

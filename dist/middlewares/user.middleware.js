@@ -100,5 +100,17 @@ class UserMiddleware {
             next(e);
         }
     }
+    async isValidChangePassword(req, res, next) {
+        try {
+            const { error } = valitors_1.UserValidator.changeUserPassword.validate(req.body);
+            if (error) {
+                throw new errors_1.ApiError(error.message, 400);
+            }
+            next();
+        }
+        catch (e) {
+            next(e);
+        }
+    }
 }
 exports.userMiddleware = new UserMiddleware();

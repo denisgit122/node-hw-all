@@ -1,9 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authService = void 0;
+const email_constants_1 = require("../constants/email.constants");
 const errors_1 = require("../errors");
 const modeles_1 = require("../modeles");
-const modeles_2 = require("../modeles");
+const email_service_1 = require("./email.service");
 const password_service_1 = require("./password.service");
 const token_service_1 = require("./token.service");
 class AuthService {
@@ -11,10 +12,11 @@ class AuthService {
         try {
             const { password } = body;
             const hashedPassword = await password_service_1.passwordService.hash(password);
-            await modeles_2.User.create({
+            await modeles_1.User.create({
                 ...body,
                 password: hashedPassword,
             });
+            await email_service_1.emailService.sendMail("yaholnykd@gmail.com ", email_constants_1.EmailActions.WELCOME);
         }
         catch (e) {
             throw new errors_1.ApiError(e.message, e.status);
@@ -56,6 +58,15 @@ class AuthService {
         catch (e) {
             throw new errors_1.ApiError(e.message, e.status);
         }
+    }
+    async changePassword(userId, oldPassword, newPassword) {
+        const user = await modeles_1.User.findById(userId);
+        const isMatched = await password_service_1.passwordService.compare(oldPassword, user.password);
+        if (!isMatched) {
+            throw new errors_1.ApiError("wrong old password", 400);
+        }
+        const hashedPassword = await password_service_1.passwordService.hash(newPassword);
+        await modeles_1.User.updateOne({ _id: user._id }, { password: hashedPassword });
     }
 }
 exports.authService = new AuthService();
