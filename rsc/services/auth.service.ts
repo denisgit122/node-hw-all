@@ -78,6 +78,7 @@ class AuthService {
     newPassword: string
   ): Promise<void> {
     const user = await User.findById(userId);
+
     const isMatched = await passwordService.compare(oldPassword, user.password);
     if (!isMatched) {
       throw new ApiError("wrong old password", 400);
