@@ -33,6 +33,18 @@ router.post(
   authController.refresh
 );
 
+//forgot pass
+router.post(
+  "/password/forgot",
+  userMiddleware.getDyamicallyOrThrow("email"),
+  authController.forgotPassword
+);
+router.put(
+  "/password/forgot/:token",
+  authMiddleware.checkActionForgotToken,
+  authController.setForgotPassword
+);
+
 router.post("/login");
 
 export const authRouter = router;

@@ -22,6 +22,10 @@ const userSchema = new Schema(
       type: String,
       enum: EGender,
     },
+    isActivated: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     versionKey: false,
