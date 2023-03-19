@@ -22,6 +22,11 @@ const userSchema = new mongoose_1.Schema({
         type: String,
         enum: enums_1.EGender,
     },
+    status: {
+        type: String,
+        enum: enums_1.EUserStatus,
+        default: enums_1.EUserStatus.inactive,
+    },
 }, {
     versionKey: false,
     timestamp: true,

@@ -5,14 +5,19 @@ var EmailActions;
 (function (EmailActions) {
     EmailActions[EmailActions["WELCOME"] = 0] = "WELCOME";
     EmailActions[EmailActions["FORGOT_PASSWORD"] = 1] = "FORGOT_PASSWORD";
+    EmailActions[EmailActions["ACTIVATE"] = 2] = "ACTIVATE";
 })(EmailActions = exports.EmailActions || (exports.EmailActions = {}));
 exports.allTemplates = {
     [EmailActions.WELCOME]: {
-        subject: "Great sea you in out app!",
+        subject: "Great to see you in our app!",
         templateName: "register",
     },
     [EmailActions.FORGOT_PASSWORD]: {
-        subject: "We control your password just follower all and everything will be good",
+        subject: "We control your password, just follow all steps and everything will be good",
         templateName: "forgotPassword",
+    },
+    [EmailActions.ACTIVATE]: {
+        subject: "Activate!",
+        templateName: "activate",
     },
 };

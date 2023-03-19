@@ -63,7 +63,7 @@ class TokenService {
         let secret = "";
         switch (tokenType) {
             case action_token_type_enum_1.EActionTokenType.activate:
-                secret = configs_1.confi.ACCESS_SECRET;
+                secret = configs_1.confi.ACTIVATE_SECRET;
                 break;
             case action_token_type_enum_1.EActionTokenType.forgot:
                 secret = configs_1.confi.FORGOT_SECRET;
@@ -85,7 +85,7 @@ class TokenService {
             return jwt.verify(token, secret);
         }
         catch (e) {
-            throw new errors_1.ApiError("Token nor valid", 401);
+            throw new errors_1.ApiError("Token not valid", 401);
         }
     }
 }

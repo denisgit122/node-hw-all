@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authService = void 0;
 const email_constants_1 = require("../constants/email.constants");
+const enums_1 = require("../enums");
 const action_token_type_enum_1 = require("../enums/action-token-type-enum");
 const errors_1 = require("../errors");
 const modeles_1 = require("../modeles");
@@ -94,6 +95,30 @@ class AuthService {
         try {
             const hashedPassword = await password_service_1.passwordService.hash(password);
             await modeles_1.User.updateOne({ _id: id }, { password: hashedPassword });
+        }
+        catch (e) {
+            throw new errors_1.ApiError(e.message, e.status);
+        }
+    }
+    async sendActiveToken(user) {
+        try {
+            const actionToken = token_service_1.tokenService.generateActionToken({ _id: user._id }, action_token_type_enum_1.EActionTokenType.activate);
+            await modeles_1.Action.create({
+                actionToken,
+                tokenType: action_token_type_enum_1.EActionTokenType.activate,
+                _user_id: user._id,
+            });
+            await email_service_1.emailService.sendMail(user.email, email_constants_1.EmailActions.ACTIVATE, {
+                token: actionToken,
+            });
+        }
+        catch (e) {
+            throw new errors_1.ApiError(e.message, e.status);
+        }
+    }
+    async activate(userId) {
+        try {
+            await modeles_1.User.updateOne({ _id: userId }, { $set: { status: enums_1.EUserStatus.active } });
         }
         catch (e) {
             throw new errors_1.ApiError(e.message, e.status);

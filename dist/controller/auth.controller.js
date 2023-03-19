@@ -65,5 +65,25 @@ class AuthController {
             next(e);
         }
     }
+    async sendActiveToken(req, res, next) {
+        try {
+            const { user } = req.res.locals;
+            await services_1.authService.sendActiveToken(user);
+            res.sendStatus(204);
+        }
+        catch (e) {
+            next(e);
+        }
+    }
+    async activate(req, res, next) {
+        try {
+            const { _id } = req.res.locals.jwtPayload;
+            await services_1.authService.activate(_id);
+            res.sendStatus(204);
+        }
+        catch (e) {
+            next(e);
+        }
+    }
 }
 exports.authController = new AuthController();

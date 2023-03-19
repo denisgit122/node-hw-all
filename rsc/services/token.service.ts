@@ -47,7 +47,7 @@ class TokenService {
     let secret = "";
     switch (tokenType) {
       case EActionTokenType.activate:
-        secret = confi.ACCESS_SECRET;
+        secret = confi.ACTIVATE_SECRET;
         break;
       case EActionTokenType.forgot:
         secret = confi.FORGOT_SECRET;
@@ -55,6 +55,24 @@ class TokenService {
     }
     return jwt.sign(payload, secret, { expiresIn: "7d" });
   }
+
+  // public checkActionToken(token: string, tokenType: EActionTokenType) {
+  //   try {
+  //     let secret = "";
+  //
+  //     switch (tokenType) {
+  //       case EActionTokenType.forgot:
+  //         secret = confi.FORGOT_SECRET;
+  //         break;
+  //       case EActionTokenType.activate:
+  //         secret = confi.ACTIVATE_SECRET;
+  //         break;
+  //     }
+  //     return jwt.verify(token, secret) as IActionTokenPayload;
+  //   } catch (e) {
+  //     throw new ApiError("Token nor valid", 401);
+  //   }
+  // }
 
   public checkActionToken(token: string, tokenType: EActionTokenType) {
     try {
@@ -68,9 +86,10 @@ class TokenService {
           secret = confi.ACTIVATE_SECRET;
           break;
       }
+
       return jwt.verify(token, secret) as IActionTokenPayload;
     } catch (e) {
-      throw new ApiError("Token nor valid", 401);
+      throw new ApiError("Token not valid", 401);
     }
   }
 }

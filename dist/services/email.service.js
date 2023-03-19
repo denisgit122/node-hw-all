@@ -57,15 +57,20 @@ class EmailService {
         });
     }
     async sendMail(email, emailAction, locals = {}) {
-        const templateInfo = email_constants_1.allTemplates[emailAction];
-        locals.frontUrl = configs_1.confi.FRONT_URL;
-        const html = await this.templateParcer.render(templateInfo.templateName, locals);
-        return this.transporter.sendMail({
-            from: "no reply",
-            to: email,
-            subject: templateInfo.subject,
-            html,
-        });
+        try {
+            const templateInfo = email_constants_1.allTemplates[emailAction];
+            locals.frontUrl = configs_1.confi.FRONT_URL;
+            const html = await this.templateParcer.render(templateInfo.templateName, locals);
+            return this.transporter.sendMail({
+                from: "no reply",
+                to: email,
+                subject: templateInfo.subject,
+                html,
+            });
+        }
+        catch (e) {
+            console.log(e.message);
+        }
     }
 }
 exports.emailService = new EmailService();

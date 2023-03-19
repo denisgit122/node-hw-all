@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authMiddleware = void 0;
 const enums_1 = require("../enums");
-const action_token_type_enum_1 = require("../enums/action-token-type-enum");
 const errors_1 = require("../errors");
 const modeles_1 = require("../modeles");
 const services_1 = require("../services");
@@ -43,21 +42,25 @@ class AuthMiddleware {
             next(e);
         }
     }
-    async checkActionForgotToken(req, res, next) {
-        try {
-            const actionToken = req.params.token;
-            if (!actionToken) {
-                throw new errors_1.ApiError("not token", 401);
+    checkActionToken(type) {
+        return async (req, res, next) => {
+            try {
+                const actionToken = req.params.token;
+                if (!actionToken) {
+                    throw new errors_1.ApiError("not token", 401);
+                }
+                const jwtPayload = services_1.tokenService.checkActionToken(actionToken, type);
+                const tokenInfo = await modeles_1.Action.findOne({ actionToken });
+                if (!tokenInfo) {
+                    throw new errors_1.ApiError("token not valid", 401);
+                }
+                req.res.locals = { tokenInfo, jwtPayload };
+                next();
             }
-            const jwtPayload = services_1.tokenService.checkActionToken(actionToken, action_token_type_enum_1.EActionTokenType.forgot);
-            const tokenInfo = await modeles_1.Action.findOne({ actionToken });
-            if (!tokenInfo) {
-                throw new errors_1.ApiError("token not found", 401);
+            catch (e) {
+                next(e);
             }
-            req.res.locals = { tokenInfo, jwtPayload };
-            next();
-        }
-        catch (e) { }
+        };
     }
 }
 exports.authMiddleware = new AuthMiddleware();
