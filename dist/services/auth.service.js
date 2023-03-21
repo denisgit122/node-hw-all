@@ -95,6 +95,10 @@ class AuthService {
         try {
             const hashedPassword = await password_service_1.passwordService.hash(password);
             await modeles_1.User.updateOne({ _id: id }, { password: hashedPassword });
+            await modeles_1.Token.deleteMany({
+                _user_id: id,
+                tokenType: action_token_type_enum_1.EActionTokenType.forgot,
+            });
         }
         catch (e) {
             throw new errors_1.ApiError(e.message, e.status);
@@ -118,7 +122,13 @@ class AuthService {
     }
     async activate(userId) {
         try {
-            await modeles_1.User.updateOne({ _id: userId }, { $set: { status: enums_1.EUserStatus.active } });
+            await Promise.all([
+                modeles_1.User.updateOne({ _id: userId }, { $set: { status: enums_1.EUserStatus.active } }),
+                await modeles_1.Token.deleteMany({
+                    _user_id: userId,
+                    tokenType: action_token_type_enum_1.EActionTokenType.activate,
+                }),
+            ]);
         }
         catch (e) {
             throw new errors_1.ApiError(e.message, e.status);
