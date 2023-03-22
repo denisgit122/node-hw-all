@@ -6,6 +6,7 @@ var EmailActions;
     EmailActions[EmailActions["WELCOME"] = 0] = "WELCOME";
     EmailActions[EmailActions["FORGOT_PASSWORD"] = 1] = "FORGOT_PASSWORD";
     EmailActions[EmailActions["ACTIVATE"] = 2] = "ACTIVATE";
+    EmailActions[EmailActions["RENIDER"] = 3] = "RENIDER";
 })(EmailActions = exports.EmailActions || (exports.EmailActions = {}));
 exports.allTemplates = {
     [EmailActions.WELCOME]: {

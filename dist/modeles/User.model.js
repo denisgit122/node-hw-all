@@ -6,6 +6,7 @@ const enums_1 = require("../enums");
 const userSchema = new mongoose_1.Schema({
     name: {
         type: String,
+        index: true,
     },
     email: {
         type: String,

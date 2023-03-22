@@ -6,6 +6,7 @@ const enums_1 = require("../enums");
 const action_token_type_enum_1 = require("../enums/action-token-type-enum");
 const errors_1 = require("../errors");
 const modeles_1 = require("../modeles");
+const Old_password_model_1 = require("../modeles/Old.password.model");
 const email_service_1 = require("./email.service");
 const password_service_1 = require("./password.service");
 const token_service_1 = require("./token.service");
@@ -86,17 +87,18 @@ class AuthService {
             await email_service_1.emailService.sendMail(user.email, email_constants_1.EmailActions.FORGOT_PASSWORD, {
                 token: actionToken,
             });
+            await Old_password_model_1.OldPassword.create({ _user_id: user._id, password: user.password });
         }
         catch (e) {
             throw new errors_1.ApiError(e.message, e.status);
         }
     }
-    async setForgotPassword(password, id) {
+    async setForgotPassword(password, id, token) {
         try {
             const hashedPassword = await password_service_1.passwordService.hash(password);
             await modeles_1.User.updateOne({ _id: id }, { password: hashedPassword });
-            await modeles_1.Token.deleteMany({
-                _user_id: id,
+            await modeles_1.Action.deleteOne({
+                actionToken: token,
                 tokenType: action_token_type_enum_1.EActionTokenType.forgot,
             });
         }

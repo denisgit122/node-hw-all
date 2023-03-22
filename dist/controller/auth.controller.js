@@ -58,7 +58,7 @@ class AuthController {
         try {
             const { password } = req.body;
             const { tokenInfo } = req.res.locals;
-            await services_1.authService.setForgotPassword(password, tokenInfo._user_id);
+            await services_1.authService.setForgotPassword(password, tokenInfo._user_id, req.params.token);
             res.sendStatus(200);
         }
         catch (e) {

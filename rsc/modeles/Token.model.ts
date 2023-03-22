@@ -23,6 +23,7 @@ const tokensSchema = new Schema(
   },
   {
     versionKey: false,
+    timestamps: true,
   }
 );
 export const Token = model("Token", tokensSchema);

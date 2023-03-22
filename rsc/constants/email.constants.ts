@@ -2,6 +2,7 @@ export enum EmailActions {
   WELCOME,
   FORGOT_PASSWORD,
   ACTIVATE,
+  RENIDER,
 }
 
 // export const allTemplates = {

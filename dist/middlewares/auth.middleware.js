@@ -4,6 +4,7 @@ exports.authMiddleware = void 0;
 const enums_1 = require("../enums");
 const errors_1 = require("../errors");
 const modeles_1 = require("../modeles");
+const Old_password_model_1 = require("../modeles/Old.password.model");
 const services_1 = require("../services");
 class AuthMiddleware {
     async checkAccessToken(req, res, next) {
@@ -61,6 +62,27 @@ class AuthMiddleware {
                 next(e);
             }
         };
+    }
+    async checkOldPassword(req, res, next) {
+        try {
+            const { body } = req;
+            const { tokenInfo } = req.res.locals;
+            const oldPassword = await Old_password_model_1.OldPassword.find({
+                _user_id: tokenInfo._user_id,
+            });
+            if (!oldPassword)
+                return next();
+            await Promise.all(oldPassword.map(async (record) => {
+                const isMatched = await services_1.passwordService.compare(body.password, record.password);
+                if (isMatched) {
+                    throw new errors_1.ApiError("Your new password is the same as your old password", 409);
+                }
+            }));
+            next();
+        }
+        catch (e) {
+            next(e);
+        }
     }
 }
 exports.authMiddleware = new AuthMiddleware();

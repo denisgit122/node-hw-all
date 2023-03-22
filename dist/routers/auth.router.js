@@ -13,7 +13,7 @@ router.post("/login", middlewares_1.userMiddleware.isUserValidLogin, middlewares
 router.post("/password/change", middlewares_1.userMiddleware.isValidChangePassword, middlewares_1.authMiddleware.checkAccessToken, controller_1.authController.changePassword);
 router.post("/refresh", middlewares_1.authMiddleware.checkRefreshToken, controller_1.authController.refresh);
 router.post("/password/forgot", common_middleware_1.commonMiddleware.isBodyValid(valitors_1.UserValidator.emailValidator), middlewares_1.userMiddleware.getDyamicallyOrThrow("email"), controller_1.authController.forgotPassword);
-router.put("/password/forgot/:token", middlewares_1.authMiddleware.checkActionToken(action_token_type_enum_1.EActionTokenType.forgot), controller_1.authController.setForgotPassword);
+router.put("/password/forgot/:token", middlewares_1.authMiddleware.checkActionToken(action_token_type_enum_1.EActionTokenType.forgot), middlewares_1.authMiddleware.checkOldPassword, controller_1.authController.setForgotPassword);
 router.post("/activate", common_middleware_1.commonMiddleware.isBodyValid(valitors_1.UserValidator.emailValidator), middlewares_1.userMiddleware.getDyamicallyOrThrow("email"), controller_1.authController.sendActiveToken);
 router.put("/activate/:token", middlewares_1.authMiddleware.checkActionToken(action_token_type_enum_1.EActionTokenType.activate), controller_1.authController.activate);
 router.post("/login");
