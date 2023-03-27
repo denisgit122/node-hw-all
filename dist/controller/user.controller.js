@@ -6,7 +6,7 @@ const services_1 = require("../services");
 class UserController {
     async getAll(req, res, next) {
         try {
-            const users = await services_1.userService.getAll();
+            const users = await services_1.userService.getWhithPagination(req.query);
             return res.json(users);
         }
         catch (e) {

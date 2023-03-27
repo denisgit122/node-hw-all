@@ -1,11 +1,11 @@
 import express, { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 
-import { confi } from "./configs/config";
+import { confi } from "./configs";
 import { cronRunner } from "./crons";
-import { authRouter } from "./routers/auth.router";
-import { userRouter } from "./routers/user.router";
-import { IError } from "./types/common.type";
+import { authRouter, carRouter } from "./routers";
+import { userRouter } from "./routers";
+import { IError } from "./types";
 
 const app = express();
 
@@ -14,6 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/users", userRouter);
 app.use("/auth", authRouter);
+app.use("/cars", carRouter);
 
 app.use((err: IError, req: Request, res: Response, next: NextFunction) => {
   const status = err.status || 500;

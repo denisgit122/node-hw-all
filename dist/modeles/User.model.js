@@ -19,6 +19,10 @@ const userSchema = new mongoose_1.Schema({
         type: String,
         required: [true, "Passord is required"],
     },
+    age: {
+        type: Number,
+        required: false,
+    },
     gender: {
         type: String,
         enum: enums_1.EGender,
@@ -32,4 +36,17 @@ const userSchema = new mongoose_1.Schema({
     versionKey: false,
     timestamp: true,
 });
+userSchema.methods = {
+    nameWithAge() {
+        return `${this.name} is ${this.age} years old`;
+    },
+};
+userSchema.virtual("nameWithSurname").get(function () {
+    return `${this.name} Piatov`;
+});
+userSchema.statics = {
+    async findByName(name) {
+        return this.find({ name });
+    },
+};
 exports.User = (0, mongoose_1.model)("user", userSchema);
