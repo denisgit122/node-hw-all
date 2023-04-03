@@ -28,6 +28,10 @@ const userSchema = new Schema(
       type: String,
       enum: EGender,
     },
+    avatar: {
+      type: String,
+      required: false,
+    },
     status: {
       type: String,
       enum: EUserStatus,

@@ -7,6 +7,7 @@ export interface IUser {
   email: string;
   gender: string;
   age: number;
+  avatar?: string;
 }
 
 export interface IUserMethods {

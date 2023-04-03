@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+   </head>
+<body>
+
+<div class="block"></div>
+
+<input placeholder="message">
+<button>send mes</button>
+
+<script type = "module">
+    import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js"
+    const socket = io("http://localhost:5100", {
+        auth: {
+            token: "saasa",
+        }
+    });
+    //
+    // socket.on("user:connected", (data)=>{
+    //     document.write(data.message)
+    // })
+    socket.on("message:get",(text)=>{
+        const p = document.createElement('p')
+        p.innerText = text
+        document.querySelector('.block').appendChild(p)
+    })
+    document.querySelector('button').onclick = () => {
+        const text = document.querySelector('input').value
+       socket.emit('message: send', text)
+    }
+</script>
+
+
+</body>
+</html>

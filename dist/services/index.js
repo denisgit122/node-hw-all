@@ -17,5 +17,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./auth.service"), exports);
 __exportStar(require("./car.service"), exports);
 __exportStar(require("./password.service"), exports);
+__exportStar(require("./S3.service"), exports);
 __exportStar(require("./token.service"), exports);
 __exportStar(require("./user.service"), exports);

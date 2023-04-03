@@ -1,8 +1,9 @@
 import { Router } from "express";
 
 import { userController } from "../controller";
-import { authMiddleware } from "../middlewares";
+import { authMiddleware, fileMiddleware } from "../middlewares";
 import { userMiddleware } from "../middlewares";
+import { commonMiddleware } from "../middlewares/common.middleware";
 
 const router = Router();
 
@@ -31,6 +32,22 @@ router.delete(
   userMiddleware.isUserIdValid,
   userController.delete,
   authMiddleware.checkAccessToken
+);
+
+router.put(
+  "/:userId/avatar",
+  authMiddleware.checkAccessToken,
+  commonMiddleware.isIdValid("userId"),
+  fileMiddleware.isAvatarValid,
+  userMiddleware.getByIdAndThrow,
+  userController.uploadAvatar
+);
+router.delete(
+  "/:userId/avatar",
+  authMiddleware.checkAccessToken,
+  commonMiddleware.isIdValid("userId"),
+  userMiddleware.getByIdAndThrow,
+  userController.deleteAvatar
 );
 
 export const userRouter = router;

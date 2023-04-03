@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from "express";
+import { UploadedFile } from "express-fileupload";
 
+import { userMapper } from "../mappers";
 import { User } from "../modeles";
 import { IQuery, userService } from "../services";
 import { ICommontResponse } from "../types";
@@ -15,6 +17,7 @@ class UserController {
       const users = await userService.getWhithPagination(
         req.query as unknown as IQuery
       );
+
       return res.json(users);
     } catch (e) {
       next(e);
@@ -30,7 +33,8 @@ class UserController {
       // const { userId } = req.params;
       const { user } = res.locals;
       // const user = await userService.getById(userId);
-      return res.json(user);
+      const response = userMapper.toResponse(user);
+      return res.json(response);
     } catch (e) {
       next(e);
     }
@@ -90,6 +94,40 @@ class UserController {
       next(e);
     }
   }
-}
+  public async uploadAvatar(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response<IUser>> {
+    try {
+      const { user: userEnity } = res.locals;
 
+      const avatar = req.files.avatar as UploadedFile;
+      const user = await userService.uploadAvatar(avatar, userEnity);
+
+      const response = userMapper.toResponse(user);
+
+      return res.status(201).json(response);
+    } catch (e) {
+      next(e);
+    }
+  }
+  public async deleteAvatar(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response<IUser>> {
+    try {
+      const userEnity = res.locals.user as IUser;
+
+      const user = await userService.deleteAvatar(userEnity);
+
+      const response = userMapper.toResponse(user);
+
+      return res.status(201).json(response);
+    } catch (e) {
+      next(e);
+    }
+  }
+}
 export const userController = new UserController();

@@ -19,7 +19,7 @@ class UserMiddleware {
       if (!user) {
         throw new ApiError("user not faund", 422);
       }
-      res.locals = { user };
+      res.locals.user = user;
       next();
     } catch (e) {
       next(e);
