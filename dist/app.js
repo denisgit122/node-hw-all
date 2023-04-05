@@ -31,20 +31,34 @@ const express_fileupload_1 = __importDefault(require("express-fileupload"));
 const http = __importStar(require("http"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const socket_io_1 = require("socket.io");
+const swaggerUi = __importStar(require("swagger-ui-express"));
 const configs_1 = require("./configs");
 const crons_1 = require("./crons");
 const routers_1 = require("./routers");
 const routers_2 = require("./routers");
+const swaggerJson = __importStar(require("./utils/swagger.json"));
 const app = (0, express_1.default)();
 const server = http.createServer(app);
 const io = new socket_io_1.Server(server, {
     cors: {
-        origin: "*",
+        origin: "http://localhost:63342/ ",
     },
 });
 io.on("connection", (socket) => {
     socket.on("message: send", (text) => {
         io.emit("message:get", ` ${text}`);
+    });
+    socket.on("join:room", ({ roomId }) => {
+        socket.join(roomId);
+        socket
+            .to(roomId)
+            .emit("user:joined", { socketId: socket.id, action: "Joined!" });
+        socket.on("left:room", ({ roomId }) => {
+            socket.leave(roomId);
+            socket
+                .to(roomId)
+                .emit("user:left", { socketId: socket.id, action: "leave!" });
+        });
     });
 });
 app.use(express_1.default.json());
@@ -53,6 +67,7 @@ app.use(express_1.default.urlencoded({ extended: true }));
 app.use("/users", routers_2.userRouter);
 app.use("/auth", routers_1.authRouter);
 app.use("/cars", routers_1.carRouter);
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerJson));
 app.use((err, req, res, next) => {
     const status = err.status || 500;
     console.log(err);

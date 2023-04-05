@@ -11,6 +11,7 @@
     "removeComments": true,
     "noImplicitAny": true,
     "noUnusedLocals": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "resolveJsonModule": true
   }
 }

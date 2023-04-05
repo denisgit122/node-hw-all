@@ -33,14 +33,12 @@ class UserService {
 
   public async getWhithPagination(
     query: IQuery
-  ): Promise<IPaginationResponse<any>> {
+  ): Promise<IPaginationResponse<IUser>> {
     try {
       // const user = await User.findByName("denis");
       // console.log(user);
       // const user = await User.findById("64161a4d73c7ce2a400a4b12");
       // console.log(user.nameWithAge());
-      const user = await User.findById("64161a4d73c7ce2a400a4b12");
-      console.log(user.nameWithSurname);
 
       const queryStr = JSON.stringify(query);
       const queryObj = JSON.parse(
@@ -64,7 +62,8 @@ class UserService {
       const users = await User.find(searchObject)
         .limit(limit)
         .skip(skip)
-        .sort(sortedBy);
+        .sort(sortedBy)
+        .lean();
       // count() рахує загальну кількість запитів
       const usersTotalCount = await User.count();
 

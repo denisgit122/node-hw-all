@@ -17,7 +17,7 @@ class UserController {
       const users = await userService.getWhithPagination(
         req.query as unknown as IQuery
       );
-
+      console.log(users);
       return res.json(users);
     } catch (e) {
       next(e);

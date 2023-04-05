@@ -1,0 +1,112 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "SEPTEMBER-2022",
+    "description": "NODE JS MODULE FOR SEPTEMBER-2022",
+    "contact": {
+      "email": "yaholnykd@gmail.com"
+    }
+  },
+  "paths": {
+    "/cars/{carId}": {
+      "get": {
+        "tags": ["Cars"],
+        "summary": "get car by id",
+        "operationId": "get CarById",
+        "responses": {
+          "200": {
+            "description": "everything is good",
+            "schema": {
+                "$ref": "#/definitions/Car"
+            }
+          },
+          "400": {
+            "description": "no token provide"
+          }
+        },
+        "produces": [
+          "application/json",
+          "application/xml"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "description": "sdsdsa"
+            }
+          }
+        ]
+      },
+      "put": {
+        "tags": ["Cars"],
+        "responses": {
+          "200": {}
+        }
+      },
+      "delete": {
+        "tags": [
+          "Cars"
+        ],
+        "responses": {
+          "200": {}
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Car": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "brand": {
+          "type": "string",
+          "example": "BMW"
+        },
+        "model": {
+          "type": "string",
+          "example": "M5"
+        },
+        "year": {
+          "type": "number",
+          "example": "2015"
+        },
+        "user": {
+          "type": "object",
+          "example": "#defenition/User"
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "brand": {
+          "type": "string",
+          "example": "BMW"
+        },
+        "model": {
+          "type": "string",
+          "example": "M5"
+        },
+        "year": {
+          "type": "number",
+          "example": "2015"
+        },
+        "user": {
+          "type": "object",
+          "example": "#defenition/User"
+        }
+      }
+    }
+  }
+
+
+}

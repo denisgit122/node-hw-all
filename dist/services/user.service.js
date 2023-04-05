@@ -15,8 +15,6 @@ class UserService {
     }
     async getWhithPagination(query) {
         try {
-            const user = await modeles_1.User.findById("64161a4d73c7ce2a400a4b12");
-            console.log(user.nameWithSurname);
             const queryStr = JSON.stringify(query);
             const queryObj = JSON.parse(queryStr.replace(/\b(gte|lte|gt|lt)\b/, (match) => `$${match}`));
             const { page = 1, limit = 5, sortedBy = "createdAt", ...searchObject } = queryObj;
@@ -24,7 +22,8 @@ class UserService {
             const users = await modeles_1.User.find(searchObject)
                 .limit(limit)
                 .skip(skip)
-                .sort(sortedBy);
+                .sort(sortedBy)
+                .lean();
             const usersTotalCount = await modeles_1.User.count();
             return {
                 page: +page,
